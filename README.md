@@ -39,7 +39,7 @@ observer as the H∞ controller (no full-state information).
 | **Nonlinear H∞ (proposed)** | **0.977 (−15.9%)** | 11.32 (+14.3%) | 5.65 (+37.7%) |
 | Skyhook continuous (observer, c_sky = 4000) | 0.819 (−29.5%) | 12.77 (+29.0%) | 7.03 (+71.4%) |
 
-![Body acceleration PSD](results/psd_body_acc.png)
+![Body acceleration PSD](psd_body_acc.png)
 
 The H∞ controller gives the lowest body acceleration around the sprung-mass resonance
 (below 2 Hz) and degrades stroke and tire deflection less than skyhook.
