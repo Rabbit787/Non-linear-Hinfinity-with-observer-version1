@@ -1,9 +1,9 @@
-# Non-linear-Hinfinity-with-observer-version1
-
-
 # Nonlinear H∞ Output-Feedback Control for Semi-Active Suspension of an In-Wheel-Motor Vehicle
 
-Bachelor's thesis project, Chiba institute of technology (2022). MATLAB/Simulink.
+Bachelor's thesis project, Chiba Institute of Technology (2022). MATLAB/Simulink.
+*Revised in 2026: fixed model wiring, added the damper saturation constraint
+(300–8000 Ns/m), input scaling, and a fair comparison with an observer-based skyhook controller.*
+
 
 ## Overview
 In-wheel-motor (IWM) vehicles place the motor inside the wheel, which increases unsprung mass and degrades ride comfort and road holding. This project designs a nonlinear H∞ output-feedback controller for a semi-active suspension to suppress vertical vibration in a quarter-car model.
@@ -23,23 +23,43 @@ A semi-active damper can only change its damping coefficient. The damper force i
 - **Input constraint:** damping coefficient limited to [300, 8000] Ns/m (saturation on the H∞ command).
 
 
+*Revised in 2026: fixed model wiring, added the damper saturation constraint
+(300–8000 Ns/m), input scaling, and a fair comparison with a skyhook controller.*
+
 ## Results
-Road input: [bump / random road profile, speed, ...]
+**Road input:** ISO 8608 Class C random road, 60 km/h, 80 s; the first 3 s are excluded.
+Baselines: passive dampers and a continuous skyhook controller that uses the same
+observer as the H∞ controller (no full-state information).
 
-![Body acceleration](results/body_acceleration.png)
+| Controller | RMS body acc. [m/s²] | RMS stroke [mm] | RMS tire defl. [mm] |
+|---|---|---|---|
+| Passive c=300 | 1.263 (+8.7%) | 22.17 (+123.9%) | 7.28 (+77.4%) |
+| Passive c=1500 (baseline) | 1.162 | 9.90 | 4.10 |
+| Passive c=8000 | 2.410 (+107.3%) | 4.22 (−57.4%) | 5.46 (+33.1%) |
+| **Nonlinear H∞ (proposed)** | **0.977 (−15.9%)** | 11.32 (+14.3%) | 5.65 (+37.7%) |
+| Skyhook continuous (observer, c_sky = 4000) | 0.819 (−29.5%) | 12.77 (+29.0%) | 7.03 (+71.4%) |
 
-| Metric | Passive | Nonlinear H∞ (proposed) |
-|---|---|---|
-| RMS body acceleration | [ ] | [ ] ([−xx%]) |
-| [Suspension deflection / tire load] | [ ] | [ ] |
+![Body acceleration PSD](results/psd_body_acc.png)
 
-## Repository structure
-- `models/` Simulink model
-- `scripts/` parameters and simulation scripts
-- `results/` figures
+The H∞ controller gives the lowest body acceleration around the sprung-mass resonance
+(below 2 Hz) and degrades stroke and tire deflection less than skyhook.
+Above 2 Hz, including the 4–8 Hz band where humans are most sensitive,
+skyhook performs better, so its overall RMS acceleration is lower.
+
+## Limitations and future work
+- The weighting functions are not tuned for ride comfort: the acceleration weight is
+  nearly flat over 0.4–21 Hz, and the stroke and input weights have little influence.
+  Next step: shape the acceleration weight toward the 4–8 Hz band (ISO 2631 Wk).
+- The input-scaling loop (`cu`) did not fully converge in 3 iterations, so the H∞
+  controller may be weaker than intended.
+- `c_sky` for skyhook is not optimized; the nonlinear weight m1(x̂) is set to 0.
+- Quarter-car model only, simulation only.
+
+## Requirements
+MATLAB/Simulink [R2026], Control System Toolbox, Signal Processing Toolbox,
+YALMIP, SeDuMi.
 
 ## How to run
-Tested on MATLAB/Simulink [R20xx]. Run `scripts/run_simulation.m`.
-
+Run `scripts/run_hinf_suspension.m`. Figures and the results table are written to `results/`.
 ## Reference
 E. Shimizu, [title of the 1999 thesis], 1999.
