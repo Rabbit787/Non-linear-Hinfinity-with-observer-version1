@@ -62,4 +62,4 @@ YALMIP, SeDuMi.
 ## How to run
 Run `scripts/run_hinf_suspension.m`. Figures and the results table are written to `results/`.
 ## Reference
-E. Shimizu, [title of the 1999 thesis], 1999.
+E. Shimizu, "Design of Nonlinear Control Laws for Linear and Bilinear Systems Using Nonlinear H∞ Feedback" (in Japanese), doctoral thesis, from Tokyo University of Marine Science and Technology (1999).
